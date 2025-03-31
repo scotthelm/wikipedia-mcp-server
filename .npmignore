@@ -1,0 +1,15 @@
+# Source files
+src/
+test.ts
+
+# TypeScript configuration
+tsconfig.json
+
+# Development files
+.gitignore
+.git/
+.vscode/
+node_modules/
+
+# Docker files
+Dockerfile
