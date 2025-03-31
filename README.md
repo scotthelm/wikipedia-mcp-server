@@ -18,6 +18,14 @@ The server provides the following tools:
 ## Installation
 
 ```bash
+npm install @shelm/wikipedia-mcp-server
+```
+
+For development:
+
+```bash
+git clone https://github.com/scotthelm/wikipedia-mcp-server.git
+cd wikipedia-mcp-server
 npm install
 npm run build
 ```
@@ -27,10 +35,36 @@ npm run build
 ### Running the Server
 
 ```bash
-npx wikipedia-mcp-server
+npx @shelm/wikipedia-mcp-server
 ```
 
 This will start the MCP server, which communicates over stdio.
+
+### Using Programmatically
+
+You can also use the package programmatically in your own projects:
+
+```javascript
+import {
+  WikipediaServer,
+  isValidOnThisDayArgs,
+  isValidFindPageArgs,
+  isValidGetPageArgs,
+  isValidGetImagesForPageArgs,
+} from "@shelm/wikipedia-mcp-server";
+
+// Create a new server instance
+const server = new WikipediaServer();
+
+// Run the server
+server.run().catch(console.error);
+
+// Or use the validation functions and handlers directly
+if (isValidOnThisDayArgs({ date: "2023-01-01" })) {
+  const result = await server.handleOnThisDay({ date: "2023-01-01" });
+  console.log(result);
+}
+```
 
 ### Example Client
 
@@ -80,7 +114,7 @@ To use this server with Claude or other MCP-compatible assistants, add it to you
   "mcpServers": {
     "wikipedia": {
       "command": "npx",
-      "args": ["wikipedia-mcp-server"],
+      "args": ["@shelm/wikipedia-mcp-server"],
       "env": {}
     }
   }

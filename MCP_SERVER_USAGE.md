@@ -4,10 +4,16 @@ This document explains how to use the Wikipedia MCP Server with Claude or other 
 
 ## Setup
 
-1. Install and build the Wikipedia MCP Server:
+1. Install the Wikipedia MCP Server:
 
    ```bash
-   git clone https://github.com/yourusername/wikipedia-mcp-server.git
+   npm install @shelm/wikipedia-mcp-server
+   ```
+
+   Or for development:
+
+   ```bash
+   git clone https://github.com/scotthelm/wikipedia-mcp-server.git
    cd wikipedia-mcp-server
    npm install
    npm run build
@@ -23,7 +29,7 @@ This document explains how to use the Wikipedia MCP Server with Claude or other 
      "mcpServers": {
        "wikipedia": {
          "command": "npx",
-         "args": ["wikipedia-mcp-server"],
+         "args": ["@shelm/wikipedia-mcp-server"],
          "env": {},
          "disabled": false,
          "autoApprove": ["onThisDay", "findPage", "getPage", "getImagesForPage"]
@@ -40,7 +46,7 @@ This document explains how to use the Wikipedia MCP Server with Claude or other 
      "mcpServers": {
        "wikipedia": {
          "command": "npx",
-         "args": ["wikipedia-mcp-server"],
+         "args": ["@shelm/wikipedia-mcp-server"],
          "env": {},
          "disabled": false,
          "autoApprove": ["onThisDay", "findPage", "getPage", "getImagesForPage"]
@@ -50,6 +56,45 @@ This document explains how to use the Wikipedia MCP Server with Claude or other 
    ```
 
 3. Restart Claude or reload the VSCode window to apply the changes.
+
+## Using Programmatically
+
+You can also use the Wikipedia MCP Server programmatically in your own Node.js applications:
+
+```javascript
+import {
+  WikipediaServer,
+  isValidOnThisDayArgs,
+  isValidFindPageArgs,
+  isValidGetPageArgs,
+  isValidGetImagesForPageArgs,
+} from "@shelm/wikipedia-mcp-server";
+
+// Example: Get events that happened on a specific date
+async function getEventsOnDate(date) {
+  if (isValidOnThisDayArgs({ date })) {
+    const server = new WikipediaServer();
+    const result = await server.handleOnThisDay({ date });
+    return result;
+  }
+  throw new Error("Invalid date format. Use YYYY-MM-DD format.");
+}
+
+// Example: Search Wikipedia
+async function searchWikipedia(query) {
+  if (isValidFindPageArgs({ query })) {
+    const server = new WikipediaServer();
+    const result = await server.handleFindPage({ query });
+    return result;
+  }
+  throw new Error("Invalid query.");
+}
+
+// Example usage
+getEventsOnDate("2023-01-01")
+  .then((result) => console.log(JSON.parse(result.content[0].text)))
+  .catch((error) => console.error(error));
+```
 
 ## Available Tools
 
