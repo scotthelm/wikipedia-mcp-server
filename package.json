@@ -1,5 +1,5 @@
 {
-  "name": "wikipedia-mcp-server",
+  "name": "@shelm/wikipedia-mcp-server",
   "version": "1.0.0",
   "description": "MCP server for Wikipedia API interactions",
   "main": "build/index.js",
