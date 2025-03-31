@@ -10,48 +10,50 @@ import {
 import wiki from "wikipedia";
 
 // Type definitions for tool arguments
-interface OnThisDayArgs {
+export interface OnThisDayArgs {
   date: string; // ISO8601 date portion (YYYY-MM-DD)
 }
 
-interface FindPageArgs {
+export interface FindPageArgs {
   query: string;
 }
 
-interface GetPageArgs {
+export interface GetPageArgs {
   title: string;
 }
 
-interface GetImagesForPageArgs {
+export interface GetImagesForPageArgs {
   title: string;
 }
 
 // Type guards for argument validation
-const isValidOnThisDayArgs = (args: any): args is OnThisDayArgs =>
+export const isValidOnThisDayArgs = (args: any): args is OnThisDayArgs =>
   typeof args === "object" &&
   args !== null &&
   typeof args.date === "string" &&
   /^\d{4}-\d{2}-\d{2}$/.test(args.date);
 
-const isValidFindPageArgs = (args: any): args is FindPageArgs =>
+export const isValidFindPageArgs = (args: any): args is FindPageArgs =>
   typeof args === "object" &&
   args !== null &&
   typeof args.query === "string" &&
   args.query.trim() !== "";
 
-const isValidGetPageArgs = (args: any): args is GetPageArgs =>
+export const isValidGetPageArgs = (args: any): args is GetPageArgs =>
   typeof args === "object" &&
   args !== null &&
   typeof args.title === "string" &&
   args.title.trim() !== "";
 
-const isValidGetImagesForPageArgs = (args: any): args is GetImagesForPageArgs =>
+export const isValidGetImagesForPageArgs = (
+  args: any
+): args is GetImagesForPageArgs =>
   typeof args === "object" &&
   args !== null &&
   typeof args.title === "string" &&
   args.title.trim() !== "";
 
-class WikipediaServer {
+export class WikipediaServer {
   private server: Server;
 
   constructor() {
@@ -175,7 +177,7 @@ class WikipediaServer {
     );
   }
 
-  private async handleOnThisDay(args: any) {
+  public async handleOnThisDay(args: any) {
     if (!isValidOnThisDayArgs(args)) {
       throw new McpError(
         ErrorCode.InvalidParams,
@@ -218,7 +220,7 @@ class WikipediaServer {
     }
   }
 
-  private async handleFindPage(args: any) {
+  public async handleFindPage(args: any) {
     if (!isValidFindPageArgs(args)) {
       throw new McpError(
         ErrorCode.InvalidParams,
@@ -251,7 +253,7 @@ class WikipediaServer {
     }
   }
 
-  private async handleGetPage(args: any) {
+  public async handleGetPage(args: any) {
     if (!isValidGetPageArgs(args)) {
       throw new McpError(
         ErrorCode.InvalidParams,
@@ -295,7 +297,7 @@ class WikipediaServer {
     }
   }
 
-  private async handleGetImagesForPage(args: any) {
+  public async handleGetImagesForPage(args: any) {
     if (!isValidGetImagesForPageArgs(args)) {
       throw new McpError(
         ErrorCode.InvalidParams,

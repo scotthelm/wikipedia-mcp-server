@@ -87,6 +87,10 @@ To use this server with Claude or other MCP-compatible assistants, add it to you
 }
 ```
 
+## Attribution
+
+This would not be possible without the great work done by the folks who created the [wikipedia package](https://github.com/dopecodez/wikipedia)
+
 ## License
 
 MIT

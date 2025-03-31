@@ -3,22 +3,41 @@
   "version": "1.0.0",
   "description": "MCP server for Wikipedia API interactions",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "bin": {
     "wikipedia-mcp-server": "build/index.js"
   },
+  "files": [
+    "build/**/*",
+    "src/**/*",
+    "README.md",
+    "MCP_SERVER_USAGE.md",
+    "LICENSE"
+  ],
   "type": "module",
   "scripts": {
     "build": "tsc && chmod +x build/index.js",
     "start": "node build/index.js",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
     "wikipedia",
     "api"
   ],
-  "author": "",
+  "author": "shelm",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scotthelm/wikipedia-mcp-server.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "wikipedia": "^2.1.2"

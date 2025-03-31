@@ -1,5 +1,4 @@
-# Source files
-src/
+# Test files
 test.ts
 
 # TypeScript configuration
