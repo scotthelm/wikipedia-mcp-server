@@ -24,6 +24,7 @@ export interface GetPageArgs {
 
 export interface GetImagesForPageArgs {
   title: string;
+  limit?: string | number; // Optional limit parameter
 }
 
 // Type guards for argument validation
@@ -134,6 +135,11 @@ export class WikipediaServer {
               title: {
                 type: "string",
                 description: "Page title",
+              },
+              limit: {
+                type: ["string", "number"],
+                description:
+                  "Maximum number of images to retrieve (default: 50)",
               },
             },
             required: ["title"],
@@ -308,13 +314,85 @@ export class WikipediaServer {
     try {
       // Get the page images
       const page = await wiki.page(args.title);
-      const images = await page.images();
+
+      // Define the maximum number of images we want to retrieve
+      const maxImages = args.limit ? parseInt(String(args.limit)) : 50;
+
+      // Initialize an array to store all images
+      let allImages: any[] = [];
+
+      // Make multiple requests if necessary to get the desired number of images
+      let batchSize = 50; // Maximum batch size per request
+      let batches = Math.ceil(maxImages / batchSize);
+
+      for (let i = 0; i < batches; i++) {
+        // If we already have enough images, break the loop
+        if (allImages.length >= maxImages) break;
+
+        // Calculate the remaining images to fetch
+        const remainingToFetch = maxImages - allImages.length;
+        const currentBatchSize = Math.min(batchSize, remainingToFetch);
+
+        console.error(
+          `Fetching batch ${i + 1}/${batches} (${currentBatchSize} images)`
+        );
+
+        try {
+          const batchImages = await page.images({
+            autoSuggest: false,
+            redirect: false,
+            limit: currentBatchSize,
+          });
+
+          // If no images were returned, break the loop
+          if (!batchImages || batchImages.length === 0) break;
+
+          // Filter out duplicates and non-image formats before adding to allImages
+          const newImages = batchImages.filter((newImg: any) => {
+            // Check if this is a duplicate
+            if (allImages.some((img: any) => img.url === newImg.url)) {
+              return false;
+            }
+
+            // Check if this is an allowed image format (svg, gif, jpg, jpeg, png, webp)
+            const url = newImg.url.toLowerCase();
+            return (
+              url.endsWith(".svg") ||
+              url.endsWith(".gif") ||
+              url.endsWith(".jpg") ||
+              url.endsWith(".jpeg") ||
+              url.endsWith(".png") ||
+              url.endsWith(".webp")
+            );
+          });
+
+          // If no new images were returned, break the loop
+          if (newImages.length === 0) break;
+
+          // Add new images to our collection
+          allImages = [...allImages, ...newImages];
+
+          console.error(
+            `Retrieved ${allImages.length}/${maxImages} images so far`
+          );
+
+          // If we got fewer images than requested, there are no more images to fetch
+          if (batchImages.length < currentBatchSize) break;
+        } catch (batchError) {
+          console.error(
+            `Error fetching batch ${i + 1}: ${(batchError as Error).message}`
+          );
+          // Continue with the next batch even if this one failed
+        }
+      }
+
+      console.error(`Total images retrieved: ${allImages.length}`);
 
       return {
         content: [
           {
             type: "text",
-            text: JSON.stringify(images, null, 2),
+            text: JSON.stringify(allImages, null, 2),
           },
         ],
       };

@@ -81,14 +81,17 @@ async function updateResultsHtml() {
     </ul>
   </div>
   
+  <!--
   <div class="tool">
     <h2>On This Day</h2>
     ${
-      results.onThisDay
-        ? `<pre>${JSON.stringify(results.onThisDay, null, 2)}</pre>`
-        : "<p>Loading...</p>"
+      // results.onThisDay
+      //   ? `<pre>${JSON.stringify(results.onThisDay, null, 2)}</pre>`
+      //   : "<p>Loading...</p>"
+      "xxx"
     }
   </div>
+  -->
   
   <div class="tool">
     <h2>Find Page</h2>
@@ -126,7 +129,7 @@ async function updateResultsHtml() {
         ? `
       <div class="images">
         ${results.getImagesForPage
-          .slice(0, 10)
+          .slice(0, 50)
           .map(
             (img) => `
           <a href="${img.url}" target="_blank">

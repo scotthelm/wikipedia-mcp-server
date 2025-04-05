@@ -5,7 +5,7 @@ declare module "wikipedia" {
     fullurl: string;
     summary(): Promise<any>;
     content(): Promise<string>;
-    images(): Promise<any[]>;
+    images(listOptions?: listOptions): Promise<any[]>;
   }
 
   export interface WikiSearchResult {
@@ -25,6 +25,12 @@ declare module "wikipedia" {
     births: any[];
     deaths: any[];
     holidays: any[];
+  }
+
+  export interface listOptions {
+    autoSuggest?: boolean;
+    redirect?: boolean;
+    limit?: number;
   }
 
   export function page(title: string): Promise<WikiPage>;

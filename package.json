@@ -1,6 +1,6 @@
 {
   "name": "@shelm/wikipedia-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Wikipedia API interactions",
   "main": "build/index.js",
   "types": "build/index.d.ts",
